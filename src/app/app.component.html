@@ -1,1 +1,8 @@
+<nav *ngIf="currentUser">
+  <div>
+    <a class="nav-item nav-link" routerLink="/login">Home</a>
+    <a class="nav-item nav-link" (click)="logout()">Logout</a>
+  </div>
+</nav>
+
 <router-outlet></router-outlet>
