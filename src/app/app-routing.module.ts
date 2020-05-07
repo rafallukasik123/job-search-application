@@ -6,6 +6,7 @@ import {Role} from './core/_models/role.enum';
 const routes: Routes = [{
   path: 'jobSeeker', loadChildren: () => import('./feature/job-seeker/job-seeker.module').then(m => m.JobSeekerModule) , canActivate: [AuthGuard] ,  data: { roles: [Role.jobSeeker]}},
   { path: '', component: LoginComponent },
+  { path: 'employer', loadChildren: () => import('./feature/employer/employer.module').then(m => m.EmployerModule), canActivate: [AuthGuard] ,  data: { roles: [Role.employer]} },
   // otherwise redirect to home
   { path: '**', redirectTo: '' }];
 
