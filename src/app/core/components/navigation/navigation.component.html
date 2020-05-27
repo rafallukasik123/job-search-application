@@ -1,0 +1,20 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row *ngIf="!currentUser">
+    <h1>Znajdź prace!</h1>
+    <span class="spacer"></span>
+    <div class="wrapper-links">
+      <div class="wrapper-nav-link"><a class="effect-3" routerLink="/registration">Rejestracja</a></div>
+      <div class="wrapper-nav-link"><a class="effect-3" routerLink="/login">Logowanie</a></div>
+    </div>
+  </mat-toolbar-row>
+  <mat-toolbar-row *ngIf="currentUser">
+    <h1>Znajdź prace!</h1>
+    <span class="spacer"></span>
+    <div class="wrapper-links">
+      <div class="wrapper-nav-link"><a class="effect-3" routerLink="/login">Główny panel</a></div>
+      <div class="wrapper-nav-link"><a class="effect-3" (click)="logout()">Wyloguj</a></div>
+
+    </div>
+  </mat-toolbar-row>
+
+</mat-toolbar>

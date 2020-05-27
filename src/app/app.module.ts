@@ -8,16 +8,20 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ErrorInterceptor} from './core/_helpers/error.interceptor';
 import {fakeBackendProvider} from './core/_helpers/fake-beckend.interceptor';
 import {JwtInterceptor} from './core/_helpers/jwt.interceptor';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FrontPageComponent } from './shered/components/front-page/front-page.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FrontPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CoreModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
