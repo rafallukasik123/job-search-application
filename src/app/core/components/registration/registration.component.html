@@ -1,0 +1,28 @@
+<mat-horizontal-stepper  labelPosition="bottom" #stepper>
+  <mat-step [stepControl]="userRegistrationFormGroup" [editable]="false">
+    <form [formGroup]="userRegistrationFormGroup">
+      <ng-template matStepLabel>Fill out your name</ng-template>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="jobSeekerFormGroup" [editable]="false">
+    <form [formGroup]="jobSeekerFormGroup">
+      <ng-template matStepLabel>Fill out your address</ng-template>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+               required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>
