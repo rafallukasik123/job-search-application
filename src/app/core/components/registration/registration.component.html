@@ -1,17 +1,32 @@
 <mat-horizontal-stepper  labelPosition="bottom" #stepper>
-  <mat-step [stepControl]="userRegistrationFormGroup" [editable]="false">
-    <form [formGroup]="userRegistrationFormGroup">
-      <ng-template matStepLabel>Fill out your name</ng-template>
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+  <mat-step [stepControl]="userRegistrationFormGroup">
+    <div class="card">
+      <h4 class="card-header text-center">Rejestracja</h4>
+    <form [formGroup]="userRegistrationFormGroup" class="container d-flex justify-content-center align-items-center flex-column card-body">
+      <ng-template matStepLabel>Podstawowe dane</ng-template>
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Login</mat-label>
+        <input matInput placeholder="Podaj login" formControlName="login" required>
+        <mat-error *ngIf="userRegistrationFormGroup.controls.login.invalid && userRegistrationFormGroup.controls.login.errors.required">Login jest wymagany.</mat-error>
+        <mat-error *ngIf="userRegistrationFormGroup.controls.login.invalid && userRegistrationFormGroup.controls.login.errors.hasOwnProperty('minlength')">Login jest za krótki</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Kim jesteś?</mat-label>
+        <mat-select formControlName="role" [required]="true">
+          <mat-option *ngFor="let role of usersRole | keyvalue" [value]="role.value.value">
+            {{role.value.displayValue}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="role | json">Rola jest wymagana</mat-error>
       </mat-form-field>
       <div>
         <button mat-button matStepperNext>Next</button>
       </div>
     </form>
+    </div>
   </mat-step>
-  <mat-step [stepControl]="jobSeekerFormGroup" [editable]="false">
+  <mat-step [stepControl]="jobSeekerFormGroup">
     <form [formGroup]="jobSeekerFormGroup">
       <ng-template matStepLabel>Fill out your address</ng-template>
       <mat-form-field>
