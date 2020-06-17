@@ -1,7 +1,7 @@
 <mat-horizontal-stepper  labelPosition="bottom" #stepper>
   <mat-step [stepControl]="userRegistrationFormGroup">
     <div class="card">
-      <h4 class="card-header text-center">Rejestracja</h4>
+      <h4 class="card-header text-center">Podstawowe dane</h4>
     <form [formGroup]="userRegistrationFormGroup" class="container d-flex justify-content-center align-items-center flex-column card-body">
       <ng-template matStepLabel>Podstawowe dane</ng-template>
       <mat-form-field class="d-flex mt-4">
@@ -20,14 +20,30 @@
         </mat-select>
         <mat-error *ngIf="role | json">Rola jest wymagana</mat-error>
       </mat-form-field>
-      <div>
-        <button mat-button matStepperNext>Next</button>
+
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email"
+               placeholder="Ex. pat@example.com">
+        <mat-error *ngIf="userRegistrationFormGroup.controls.email.invalid && userRegistrationFormGroup.controls.email.errors.required">Email jest wymagany</mat-error>
+        <mat-error *ngIf="userRegistrationFormGroup.controls.email.invalid && userRegistrationFormGroup.controls.email.errors.email">Email jest niepoprawny</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="mt-4">
+        <input matInput type="password" placeholder="Hasło" formControlName="password">
+        <mat-error *ngIf="userRegistrationFormGroup.controls.password.invalid && userRegistrationFormGroup.controls.password.errors.required">Hasło jest wymagane</mat-error>
+        <mat-error *ngIf="userRegistrationFormGroup.controls.password.invalid && userRegistrationFormGroup.controls.password.errors.hasOwnProperty('minlength')">Hasło jest za krótkie</mat-error>
+      </mat-form-field>
+      <div class="mt-4">
+        <button class="btn btn-primary" mat-button matStepperNext>Dalej</button>
       </div>
     </form>
     </div>
   </mat-step>
+
+
   <mat-step [stepControl]="jobSeekerFormGroup">
-    <form [formGroup]="jobSeekerFormGroup">
+    <form [formGroup]="jobSeekerFormGroup" *ngIf="userRegistrationFormGroup.value.role == usersRole.jobSeeker.value">
       <ng-template matStepLabel>Fill out your address</ng-template>
       <mat-form-field>
         <mat-label>Address</mat-label>
