@@ -18,7 +18,7 @@
             {{role.value.displayValue}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="role | json">Rola jest wymagana</mat-error>
+        <mat-error *ngIf="userRegistrationFormGroup.controls.role.invalid">Rola jest wymagana</mat-error>
       </mat-form-field>
 
       <mat-form-field class="d-flex mt-4">
@@ -43,17 +43,74 @@
 
 
   <mat-step [stepControl]="jobSeekerFormGroup">
-    <form [formGroup]="jobSeekerFormGroup" *ngIf="userRegistrationFormGroup.value.role == usersRole.jobSeeker.value">
-      <ng-template matStepLabel>Fill out your address</ng-template>
-      <mat-form-field>
-        <mat-label>Address</mat-label>
-        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-               required>
+    <div class="card">
+      <h4 class="card-header text-center">Szczegółowe dane</h4>
+    <form [formGroup]="jobSeekerFormGroup" *ngIf="userRegistrationFormGroup.value.role == usersRole.jobSeeker.value" class="container d-flex justify-content-center align-items-center flex-column card-body">
+      <ng-template matStepLabel>Szczegółowe dane</ng-template>
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Imie</mat-label>
+        <input matInput placeholder="Podaj imie" formControlName="name" required>
+        <mat-error *ngIf="jobSeekerFormGroup.controls.name.invalid && jobSeekerFormGroup.controls.name.errors.required">Imie jest wymagane</mat-error>
       </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Nazwisko</mat-label>
+        <input matInput placeholder="Podaj nazwisko" formControlName="surname" required>
+        <mat-error *ngIf="jobSeekerFormGroup.controls.surname.invalid && jobSeekerFormGroup.controls.surname.errors.required">Nazwisko jest wymagane.</mat-error>
+      </mat-form-field>
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Język</mat-label>
+        <mat-select formControlName="language" [required]="true">
+          <mat-option *ngFor="let element of languageArray" [value]="element">
+            {{element}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="jobSeekerFormGroup.controls.language.invalid">Język jest wymagany</mat-error>
+      </mat-form-field>
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Wykształcenie</mat-label>
+        <mat-select formControlName="education" [required]="true">
+          <mat-option *ngFor="let element of educationArray" [value]="element">
+            {{element}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="jobSeekerFormGroup.controls.education.invalid">Wykształcenie jest wymagany</mat-error>
+      </mat-form-field>
+      <mat-form-field class="d-flex mt-4">
+        <mat-label>Województwo</mat-label>
+        <mat-select formControlName="localization" [required]="true">
+          <mat-option *ngFor="let element of localizationArray" [value]="element">
+            {{element}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="jobSeekerFormGroup.controls.localization.invalid">Województwo jest wymagane</mat-error>
+      </mat-form-field>
+      <div class="d-flex mt-4">
+        <button class="btn btn-primary" mat-button matStepperPrevious>Powrót</button>
+        <button [disabled]="!disableBtnSubmit" class="btn btn-success ml-4" (click)="onSubmit()" mat-button matStepperNext>Zapisz</button>
       </div>
     </form>
+
+      <form [formGroup]="employerFormGroup" *ngIf="userRegistrationFormGroup.value.role == usersRole.employer.value" class="container d-flex justify-content-center align-items-center flex-column card-body">
+        <ng-template matStepLabel>Szczegółowe dane</ng-template>
+        <mat-form-field class="d-flex mt-4">
+          <mat-label>Nazwa firmy</mat-label>
+          <input matInput placeholder="Podaj Nazwe" formControlName="name" required>
+          <mat-error *ngIf="employerFormGroup.controls.name.invalid && employerFormGroup.controls.name.errors.required">Nazwa firmy jest wymagana.</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="d-flex mt-4">
+          <mat-label>Opis firmy</mat-label>
+          <textarea matInput formControlName="description" required></textarea>
+          <mat-error *ngIf="employerFormGroup.controls.description.invalid && employerFormGroup.controls.description.errors.hasOwnProperty('minlength')">Opis jest za krótki</mat-error>
+
+        </mat-form-field>
+        <div class="d-flex mt-4">
+          <button class="btn btn-primary" mat-button matStepperPrevious>Powrót</button>
+          <button [disabled]="!disableBtnSubmit" class="btn btn-success ml-4" (click)="onSubmit()" mat-button matStepperNext>
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Zapisz
+          </button>
+        </div>
+      </form>
+    </div>
   </mat-step>
 </mat-horizontal-stepper>

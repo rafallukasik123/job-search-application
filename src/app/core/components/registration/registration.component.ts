@@ -5,6 +5,7 @@ import {RegistrationService} from '../../_services/registration.service';
 import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {User} from '../../_models/user';
+import {Registration} from '../../_models/registration';
 
 
 @Component({
@@ -20,12 +21,16 @@ export class RegistrationComponent implements OnInit {
   languageArray: string[];
   localizationArray : string[];
   educationArray : string[];
+  disableBtnSubmit: boolean;
+  private loading: boolean;
+  private  error;
   constructor(private formBuilder: FormBuilder, private registrationService: RegistrationService) {
 
   }
 
 
   ngOnInit() {
+    this.loading = false;
     this.initRole();
     this.getAllFormDataFromApi();
     this.userRegistrationFormGroup = this.formBuilder.group({
@@ -34,7 +39,9 @@ export class RegistrationComponent implements OnInit {
       email: ['',[Validators.required, Validators.email]],
       password : ['', [Validators.required, Validators.minLength(3)]]
     });
-    this.userRegistrationFormGroup.get('role').setValue(Role.jobSeeker);
+    this.userRegistrationFormGroup.get('role').setValue(Role.jobSeeker); // domyslna wartosc selecta
+
+
 
     this.jobSeekerFormGroup = this.formBuilder.group({
       name: ['', Validators.required],
@@ -44,12 +51,62 @@ export class RegistrationComponent implements OnInit {
       education: ['', Validators.required],
 
     });
-  }
-  get role() {
-    return this.jobSeekerFormGroup.get('role');
+
+    this.employerFormGroup = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: ['', [Validators.required, Validators.minLength(3)]]
+    });
+    this.setObservablesForm();
   }
 
- getAllFormDataFromApi(){
+  get role(){
+    return this.userRegistrationFormGroup.get('role').value;
+  }
+
+  setObservablesForm(){
+    this.disableBtnSubmit = false;
+    this.userRegistrationFormGroup.valueChanges
+      .subscribe((changedObj: any) => {
+        if (this.userRegistrationFormGroup.invalid){
+          this.disableBtnSubmit = false;
+        }
+        else{
+          if (this.userRegistrationFormGroup.value.role === this.usersRole.jobSeeker.value){
+            if (this.jobSeekerFormGroup.invalid){
+              this.disableBtnSubmit = false;
+            }else{
+              this.disableBtnSubmit = true;
+            }
+          }
+          else if(this.userRegistrationFormGroup.value.role === this.usersRole.employer.value){
+            if (this.employerFormGroup.invalid){
+              this.disableBtnSubmit = false;
+            }else{
+              this.disableBtnSubmit = true;
+            }
+          }
+        }
+      });
+    this.jobSeekerFormGroup.valueChanges
+      .subscribe((changedObj: any) => {
+      if (this.userRegistrationFormGroup.invalid  || this.jobSeekerFormGroup.invalid){
+        this.disableBtnSubmit = false;
+      }else{
+        this.disableBtnSubmit = true;
+      }
+      });
+
+    this.employerFormGroup.valueChanges
+      .subscribe((changedObj: any) => {
+        if (this.userRegistrationFormGroup.invalid ||  this.employerFormGroup.invalid){
+          this.disableBtnSubmit = false;
+        }else{
+          this.disableBtnSubmit = true;
+        }
+      });
+  }
+
+  getAllFormDataFromApi(){
     this.registrationService.getLanguageList().pipe(first())
      .subscribe(
        ( res: string[]) => {
@@ -66,7 +123,7 @@ export class RegistrationComponent implements OnInit {
        error => {
        });
 
-   this.registrationService.getEducationList().pipe(first())
+    this.registrationService.getEducationList().pipe(first())
      .subscribe(
        ( res: string[]) => {
          this.educationArray = res;
@@ -87,5 +144,27 @@ export class RegistrationComponent implements OnInit {
         displayValue : 'Jestem pracodawcą'
       }
     };
+  }
+
+  onSubmit() {
+    this.loading = true;
+
+    const registraionDataObject: Registration = {
+      login : this.userRegistrationFormGroup.controls.login.value,
+      email : this.userRegistrationFormGroup.controls.email.value,
+      password : this.userRegistrationFormGroup.controls.password.value,
+      role : this.userRegistrationFormGroup.controls.role.value,
+    }
+
+    this.registrationService.registration(registraionDataObject)
+      .pipe(first())
+      .subscribe(
+        ( res) => {
+
+        },
+        error => {
+          this.error = error;
+          this.loading = false;
+        });
   }
 }
